@@ -1,5 +1,3 @@
-import { parse } from "dotenv";
-import { supabase } from "../supabaseConfig.js";
 import { getAllProductsService } from "./services/getAllProductsService.js";
 
 const getAllProducts = async (req, res) => {
@@ -13,7 +11,7 @@ const getAllProducts = async (req, res) => {
     console.log(`🚀 Fetching products - Category: ${categoryName || "All"}, Page: ${page}, Limit: ${limit}, Offset: ${offset}\n`);
 
     try {
-        const data = await getAllProductsService(supabase, categoryName, limit, offset, initialValue, finalValue);
+        const data = await getAllProductsService(categoryName, limit, offset, initialValue, finalValue);
         
         if (data instanceof Error) {
             console.error("❌", data.message, "\n");
