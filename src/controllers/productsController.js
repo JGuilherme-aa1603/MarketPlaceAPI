@@ -1,7 +1,6 @@
 import { getAllProductsService } from "./services/getAllProductsService.js";
 import { getAllProductReviewsService} from "./services/getAllProductReviewsService.js";
 import { getProductByIdService } from "./services/getProductByIdService.js";
-import { getProductsByUserIdService } from "./services/getProductsByUserIdService.js";
 
 const getAllProducts = async (req, res) => {
     const categoryName = req.query.category;
