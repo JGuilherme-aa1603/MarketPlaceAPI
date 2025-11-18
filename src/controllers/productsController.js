@@ -1,4 +1,7 @@
 import { getAllProductsService } from "./services/getAllProductsService.js";
+import { getAllProductReviewsService} from "./services/getAllProductReviewsService.js";
+import { getProductByIdService } from "./services/getProductByIdService.js";
+import { getProductsByUserIdService } from "./services/getProductsByUserIdService.js";
 
 const getAllProducts = async (req, res) => {
     const categoryName = req.query.category;
@@ -12,11 +15,6 @@ const getAllProducts = async (req, res) => {
 
     try {
         const data = await getAllProductsService(categoryName, limit, offset, initialValue, finalValue);
-        
-        if (data instanceof Error) {
-            console.error("❌", data.message, "\n");
-            return res.status(502).json({ error: data.message });
-        }
 
         return res.status(200).json({ products: data });
     } catch (error) {
@@ -25,7 +23,38 @@ const getAllProducts = async (req, res) => {
     }
 }
 
+const getProductById = async (req, res) => {
+    const productId = parseInt(req.params.productId);
+
+    console.log(`🚀 Fetching product with ID: ${productId}\n`);
+
+    try {
+        const data = await getProductByIdService(productId);
+
+        return res.status(200).json({ product: data });
+    } catch (error) {
+        console.error("❌ Unexpected error:", error, "\n");
+        return res.status(500).json({ error: error.message || String(error) });
+    }
+}
+
+const getAllProductsReview = async (req, res) => {
+    const productId = parseInt(req.params.productId);
+
+    console.log(`🚀 Fetching reviews for Product ID: ${productId}\n`);
+
+    try {
+        const data = await getAllProductReviewsService(productId);
+
+        return res.status(200).json({ reviews: data });
+    } catch (error) {
+        console.error("❌ Unexpected error:", error, "\n");
+        return res.status(500).json({ error: error.message || String(error) });
+    }
+}
 
 export const productsController = {
-    getAllProducts
+    getAllProducts,
+    getAllProductsReview,
+    getProductById
 };

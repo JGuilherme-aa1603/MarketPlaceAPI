@@ -1,35 +1,11 @@
 import prisma from "../../prismaClient.js";
 
-export const getAllProductsService = async (categoryName, limit = 10, offset, initialValue, finalValue) => {
+export const getProductsByUserIdService = async (userId) => {
     try {
-        // Make filters dynamically
-        const where = {};
-
-        // Fillter by category
-        if (categoryName) {
-            where.categories = {
-                name: categoryName
-            };
-        }
-
-        // Filter by price range
-        if (initialValue !== undefined && initialValue !== null && finalValue !== undefined && finalValue !== null) {
-            where.price = {
-                gte: initialValue,
-                lte: finalValue
-            };
-        } else if (initialValue !== undefined && initialValue !== null) {
-            where.price = {
-                gte: initialValue
-            };
-        } else if (finalValue !== undefined && finalValue !== null) {
-            where.price = {
-                lte: finalValue
-            };
-        }
-
-        // Search products 
-        const data = await prisma.products.findMany({
+        const products = await prisma.products.findMany({
+            where: {
+                seller_id: userId
+            },
             select: {
                 id: true,
                 title: true,
@@ -53,13 +29,11 @@ export const getAllProductsService = async (categoryName, limit = 10, offset, in
                         rate: true
                     }
                 }
-            },
-            skip: offset,
-            take: limit
+            }
         });
 
         // Calculate average rating for each product
-        const productsWithAvgRating = data.map(product => {
+        const productsWithAvgRating = products.map(product => {
             const ratings = product.ratings;
             
             let averageRating = 0;
@@ -85,7 +59,7 @@ export const getAllProductsService = async (categoryName, limit = 10, offset, in
 
         return productsWithAvgRating;
     } catch (error) {
-        console.error("❌ Error fetching products:", error);
-        return new Error(`Error fetching products: ${error.message}`);
+        console.error("❌ Error fetching products by user ID:", error);
+        return new Error("Failed to fetch products for the specified user.");
     }
 }

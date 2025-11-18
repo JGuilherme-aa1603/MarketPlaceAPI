@@ -3,6 +3,7 @@ import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
 import productsRouter from "./routes/productsRoutes.js";
+import usersRouter from "./routes/usersRoutes.js";
 
 dotenv.config();
 
@@ -19,5 +20,6 @@ app.use(helmet());
 app.use(express.json());
 
 app.use("/api/products", productsRouter);
+app.use("/api/users", usersRouter);
 
 export default app;
