@@ -8,6 +8,10 @@ const getProductByUserId = async (req, res) => {
     try {
         const data = await getProductsByUserIdService(userId);
 
+        if (data instanceof Error) {
+            return res.status(404).json({ error: data.message });
+        }
+        
         return res.status(200).json({ products: data });
     } catch (error) {
         console.error("❌ Unexpected error:", error, "\n");

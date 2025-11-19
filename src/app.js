@@ -2,8 +2,13 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
+
+import authMiddleware from "./middlewares/authMiddleware.js";
+
 import productsRouter from "./routes/productsRoutes.js";
 import usersRouter from "./routes/usersRoutes.js";
+import authRouter from "./routes/authRoutes.js";
+import cartRouter from "./routes/cartRoutes.js";
 
 dotenv.config();
 
@@ -21,5 +26,7 @@ app.use(express.json());
 
 app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/cart", authMiddleware, cartRouter);
 
 export default app;

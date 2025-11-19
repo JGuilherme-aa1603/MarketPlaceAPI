@@ -15,6 +15,10 @@ const getAllProducts = async (req, res) => {
     try {
         const data = await getAllProductsService(categoryName, limit, offset, initialValue, finalValue);
 
+        if (data instanceof Error) {
+            return res.status(404).json({ error: data.message });
+        }
+
         return res.status(200).json({ products: data });
     } catch (error) {
         console.error("❌ Unexpected error:", error, "\n");
@@ -30,6 +34,10 @@ const getProductById = async (req, res) => {
     try {
         const data = await getProductByIdService(productId);
 
+        if (data instanceof Error) {
+            return res.status(404).json({ error: data.message });
+        }
+
         return res.status(200).json({ product: data });
     } catch (error) {
         console.error("❌ Unexpected error:", error, "\n");
@@ -44,6 +52,10 @@ const getAllProductsReview = async (req, res) => {
 
     try {
         const data = await getAllProductReviewsService(productId);
+
+        if (data instanceof Error) {
+            return res.status(404).json({ error: data.message });
+        }
 
         return res.status(200).json({ reviews: data });
     } catch (error) {
