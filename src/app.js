@@ -9,6 +9,7 @@ import productsRouter from "./routes/productsRoutes.js";
 import usersRouter from "./routes/usersRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import cartRouter from "./routes/cartRoutes.js";
+import categoryRouter from "./routes/categoryRoutes.js";
 
 dotenv.config();
 
@@ -28,5 +29,6 @@ app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/cart", authMiddleware, cartRouter);
+app.use("/api/categories", categoryRouter);
 
 export default app;
