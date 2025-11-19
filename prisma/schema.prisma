@@ -88,7 +88,17 @@ model users {
   email      String     @unique @db.VarChar(255)
   password   String     @db.VarChar(255)
   created_at DateTime?  @default(now()) @db.Timestamp(6)
+  admins     admins[]
   carts      carts[]
   products   products[]
   ratings    ratings[]
+}
+
+model admins {
+  id         BigInt   @unique @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  user_id    Int
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([id, created_at])
 }
