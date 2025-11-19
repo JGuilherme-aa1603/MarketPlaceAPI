@@ -4,6 +4,7 @@ import { getProductByIdService } from "./services/getProductByIdService.js";
 
 const getAllProducts = async (req, res) => {
     const categoryName = req.query.category;
+    const productName = req.query.name;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
@@ -13,7 +14,7 @@ const getAllProducts = async (req, res) => {
     console.log(`🚀 Fetching products - Category: ${categoryName || "All"}, Page: ${page}, Limit: ${limit}, Offset: ${offset}\n`);
 
     try {
-        const data = await getAllProductsService(categoryName, limit, offset, initialValue, finalValue);
+        const data = await getAllProductsService(categoryName, productName, limit, offset, initialValue, finalValue);
 
         if (data instanceof Error) {
             return res.status(404).json({ error: data.message });

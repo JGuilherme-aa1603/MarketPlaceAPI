@@ -1,7 +1,15 @@
 import { z } from "zod";
 import { loginService } from "./services/loginService.js";
+import { registerService } from "./services/registerService.js";
+import { deleteUserService } from "./services/deleteUserService.js";
 
 const loginSchema = z.object({
+    email: z.email(),
+    password: z.string().min(5).max(100),
+});
+
+const registerSchema = z.object({
+    username: z.string().min(3).max(30),
     email: z.email(),
     password: z.string().min(5).max(100),
 });
@@ -35,6 +43,53 @@ const login = async (req, res) => {
     }
 };
 
+const register = async (req, res) => {
+    const validation = registerSchema.safeParse(req.body);
+    if (!validation.success) {
+            return res.status(400).json({
+            error: validation.error.issues.map((issue) => ({
+                message: issue.message,
+                path: issue.path,
+            })),
+        });
+    }
+
+    const { username, email, password } = validation.data;
+
+    console.log(`🚀 User ${email} attempted to register.\n`)
+    try {
+        const data = await registerService(username, email, password);
+        if (data instanceof Error) {
+            return res.status(400).json({ error: data.message });
+        }
+
+        return res.status(201).json({ message: "Registration successful!", data });
+    } catch (error) {
+        console.error("❌ Unexpected error:", error, "\n");
+        return res.status(500).json({ error: error.message || String(error) });
+    }
+};
+
+const deleteUser = async (req, res) => {
+    const userId = req.user.id;
+
+    console.log(`🚀 Deleting user with ID: ${userId}\n`);
+
+    try {
+        const data = await deleteUserService(userId);
+        if (data instanceof Error) {
+            return res.status(404).json({ error: data.message });
+        }
+
+        return res.status(200).json({ message: "User deleted successfully!" });
+    } catch (error) {
+        console.error("❌ Unexpected error:", error, "\n");
+        return res.status(500).json({ error: error.message || String(error) });
+    }
+}
+
 export const authController = {
-    login
+    login,
+    register,
+    deleteUser
 };

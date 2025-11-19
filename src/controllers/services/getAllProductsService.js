@@ -1,6 +1,6 @@
 import prisma from "../../prismaClient.js";
 
-export const getAllProductsService = async (categoryName, limit = 10, offset, initialValue, finalValue) => {
+export const getAllProductsService = async (categoryName, productName, limit = 10, offset, initialValue, finalValue) => {
     try {
         // Make filters dynamically
         const where = {};
@@ -9,6 +9,14 @@ export const getAllProductsService = async (categoryName, limit = 10, offset, in
         if (categoryName) {
             where.categories = {
                 name: categoryName
+            };
+        }
+
+        // Search by product name
+        if (productName) {
+            where.title = {
+                contains: productName,
+                mode: "insensitive"
             };
         }
 
@@ -30,6 +38,7 @@ export const getAllProductsService = async (categoryName, limit = 10, offset, in
 
         // Search products 
         const data = await prisma.products.findMany({
+            where,
             select: {
                 id: true,
                 title: true,
