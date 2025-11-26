@@ -31,4 +31,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/cart", authMiddleware, cartRouter);
 app.use("/api/categories", categoryRouter);
 
+app.use("/api/ping", (req, res) => {
+  res.status(200).json({ message: "pong" });
+});
+
 export default app;
